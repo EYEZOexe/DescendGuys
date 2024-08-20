@@ -9,8 +9,16 @@
 #include "DGMSSubsystem.generated.h"
 
 /**
- * 
+ * Declaring our own custom delegates for the menu class to bind ballbacks to
  */
+
+//Dynamic is for blueprint as its a UFUNCTION
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDGMOnHostSessionComplete, bool, bWasSuccessful);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FDGMOnFindSessionsComplete, const TArray<FOnlineSessionSearchResult>& SessionResults, bool bWasSuccessful);
+DECLARE_MULTICAST_DELEGATE_OneParam(FDGMOnJoinSessionComplete, EOnJoinSessionCompleteResult::Type Result);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDGMOnDestroySessionComplete, bool, bWasSuccessful);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDGMOnStartSessionComplete, bool, bWasSuccessful);
+
 UCLASS()
 class DGMULTIPLAYERSESSIONS_API UDGMSSubsystem : public UGameInstanceSubsystem
 {
@@ -25,6 +33,14 @@ public:
 	void JoinSession(const FOnlineSessionSearchResult& SearchResult);
 	void DestroySession();
 	void StartSession();
+
+	// Custom delegates for the menu class to bind callbacks to
+	FDGMOnHostSessionComplete DGMOnHostSessionComplete;
+	FDGMOnFindSessionsComplete DGMOnFindSessionsComplete;
+	FDGMOnJoinSessionComplete DGMOnJoinSessionComplete;
+	FDGMOnDestroySessionComplete DGMOnDestroySessionComplete;
+	FDGMOnStartSessionComplete DGMOnStartSessionComplete;
+	
 protected:
 
 	//Internal callbacks for the delegates that we will add to the online session interface delegate list
@@ -38,6 +54,7 @@ protected:
 private:
 	IOnlineSessionPtr SessionInterface;
 	TSharedPtr<FOnlineSessionSettings> LastSessionSettings;
+	TSharedPtr<FOnlineSessionSearch> LastSessionSearch;
 
 	// To add to the Online Session Interface delegate list
 	// We bind our MultiplayerSessionSubsystem internal callbacks to these delegates
@@ -55,29 +72,10 @@ private:
 	
 	FOnStartSessionCompleteDelegate OnStartSessionCompleteDelegate;
 	FDelegateHandle OnStartSessionCompleteDelegateHandle;
+
+	bool bHostSessionOnDestroy{false};
+	int32 LastMaxNumPlayers;
+	FString LastMatchType;
 };
 
-inline void UDGMSSubsystem::OnHostSessionComplete(FName SessionName, bool bWasSuccessful)
-{
-	
-}
 
-inline void UDGMSSubsystem::OnFindSessionsComplete(bool bWasSuccessful)
-{
-	
-}
-
-inline void UDGMSSubsystem::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
-{
-	
-}
-
-inline void UDGMSSubsystem::OnDestroySessionComplete(FName SessionName, bool bWasSuccessful)
-{
-	
-}
-
-inline void UDGMSSubsystem::OnStartSessionComplete(FName SessionName, bool bWasSuccessful)
-{
-	
-}

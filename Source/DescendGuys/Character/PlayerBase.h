@@ -11,7 +11,7 @@
 class UInputMappingContext;
 class UInputAction;
 
-UCLASS()
+UCLASS(Abstract)
 class DESCENDGUYS_API APlayerBase : public ACharacter
 {
 	GENERATED_BODY()

@@ -19,10 +19,13 @@ APlayerBase::APlayerBase()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetMesh());
 	CameraBoom->TargetArmLength = 600.f;
+	CameraBoom->SocketOffset.Y = -240.f;
 	CameraBoom->bUsePawnControlRotation = true;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	FRotator CameraRotation = FRotator(-10.f, 0.f, 0.f);
+	FollowCamera->SetRelativeRotation(CameraRotation);
 	FollowCamera->bUsePawnControlRotation = false;
 
 	bUseControllerRotationYaw = false;
